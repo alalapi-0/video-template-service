@@ -1,0 +1,25 @@
+# 依赖与构建产物
+node_modules/
+frontend/dist/
+*.pyc
+__pycache__/
+.pytest_cache/
+.pytest_cache/
+.venv/
+venv/
+.env
+.env.local
+
+# 上传与输出（开发时产生的大文件不上传仓库）
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
+backend/storage/outputs/*
+!backend/storage/outputs/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# 系统
+.DS_Store
