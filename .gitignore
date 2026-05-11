@@ -15,6 +15,7 @@ backend/storage/uploads/*
 !backend/storage/uploads/.gitkeep
 backend/storage/outputs/*
 !backend/storage/outputs/.gitkeep
+!backend/storage/outputs/mock-result.mp4
 
 # IDE
 .idea/

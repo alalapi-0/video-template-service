@@ -10,11 +10,11 @@
 
 - 用少量固定模板快速生成统一风格的竖屏/横屏短视频。
 - 前后端分离：前端只做轻量入口；后端负责任务与视频流水线。
-- Round 0 仅搭建骨架与 Mock，便于后续逐轮扩展。
+- 当前处于 **Round 1**：上传与任务 API 已补齐基础校验，并逐步接近「可部署试跑」的形态。
 
 ## 当前阶段
 
-**Round 0**：项目结构、文档、最小可运行前后端、模板类型与任务接口设计、AI 与视频服务的 Mock / TODO。**未**接入真实 FFmpeg 合成、真实 AI API、登录与支付。
+**Round 1**：在 Round 0 骨架之上，完成 **主/辅视频上传校验**（大小、扩展名、MIME）、**模板 ID / 文案长度**校验、`/outputs` **静态成片目录** 与 **绝对 `output_url`** 约定；仍为内存任务与 AI 规则 Mock，**未**接入真实 FFmpeg / 外网大模型 / 登录计费。
 
 ## 技术栈
 
@@ -22,8 +22,8 @@
 |----------|------|
 | 前端     | React 18、Vite 5、TypeScript |
 | 后端     | Python 3、FastAPI、Uvicorn |
-| 视频处理 | 未来：服务端 FFmpeg 命令行（Round 0 仅占位） |
-| AI 文案  | 未来：可选大模型或规则；Round 0 仅 Mock |
+| 视频处理 | 未来：服务端 FFmpeg 命令行（当前仅占位 + 上传落盘） |
+| AI 文案  | 未来：可选大模型或规则；当前 `POST /ai/split-text` 仍为 Mock |
 
 ## 目录结构
 
@@ -52,7 +52,7 @@ npm run dev
 ./scripts/dev_frontend.sh
 ```
 
-默认开发地址一般为 `http://localhost:5173`。请求后端时需配置 `VITE_API_BASE`（见 `frontend/.env.example`）。
+默认开发地址一般为 `http://localhost:5173`。请求后端时需配置 `VITE_API_BASE`；上传大小提示可用 `VITE_MAX_UPLOAD_MB` 与后端 `MAX_UPLOAD_BYTES` 对齐（见 `frontend/.env.example`、`backend/.env.example`）。
 
 ## 后端启动方式
 
@@ -70,13 +70,13 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ./scripts/dev_backend.sh
 ```
 
-## 当前支持什么（Round 0）
+## 当前支持什么（Round 1）
 
-- 根目录与 `docs/` 下的完整说明文档。
-- 前端：单页表单（主/辅视频上传、文案、模板选择、提交、状态与结果占位）。
-- 后端：`GET /health`、`GET /templates`、`POST /jobs`、`GET /jobs/{job_id}`、`POST /ai/split-text`（均为 Mock 或与内存任务配合；AI 接口为 JSON，见 `docs/api_design.md`）。
-- 模板与任务相关的 **TypeScript / Python 类型与 Mock 数据**。
-- `video_service.py`、`ai_text_service.py` 中的 Mock 与 **TODO** 注释，便于下一轮接 FFmpeg / 真实 AI。
+- `docs/`：已同步 Round 1 API 与错误码说明（见 `docs/api_design.md`）。
+- 前端：单页表单 + **上传大小前端预判** + **服务端错误 `detail` 展示**。
+- 后端：健康检查、模板列表、任务创建/查询、AI 文案 Mock REST；**`/outputs` 静态文件**。
+- 校验：允许的视频扩展名与白名单 MIME、单文件默认约 80MB（可配）、`user_text` 长度上限（可配）。
+- 回归测试：`backend/tests/test_jobs_round1.py` 等。
 
 ## 当前不支持什么
 
@@ -87,7 +87,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ## 后续路线
 
-见 `docs/roadmap.md` 与 `docs/round_notes.md`。**请勿在 Round 0 自动进入 Round 1**；下一轮以「上传与接口打通」为主。
+见 `docs/roadmap.md` 与 `docs/round_notes.md`。下一里程碑以 **模板外置与结构化版本管理（Round 2）** 为主线。
 
 ## 快速检查
 
